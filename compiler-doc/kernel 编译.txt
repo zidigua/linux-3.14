@@ -1,0 +1,31 @@
+1.烧写 bootloader  u-boot-fs4412.bin
+2.编译kernel  现在以 kernel 4.4.82 为例
+
+3.解压 tar -xvf   linux-4.4.82.tar.xz
+4. 不修改linux-4.4.82/Makefile  直接执行
+  make ARCH=arm exynos_defconfig
+
+5. make ARCH=arm menuconfig 
+  System Type  ---> 
+ [*] Samsung EXYNOS  ---> 
+[ ]   SAMSUNG EXYNOS3  
+[*]   SAMSUNG EXYNOS4
+[ ]   SAMSUNG EXYNOS5  
+  *** EXYNOS SoCs *** 
+ -*-   SAMSUNG EXYNOS4210   
+[ ]   SAMSUNG EXYNOS4212 
+[*]   SAMSUNG EXYNOS4412 
+[ ]   SAMSUNG EXYNOS4415
+退出 保存
+6.make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
+编译将会生成  zImage
+7.进入目录 linux-4.4.82/arch/arm/boot
+执行命令将 zImage 制作成 uImage
+mkimage -A arm -O linux -T kernel -C none -a 0x41000000 -e 0x41000040 -n "aaa" -d zImage uImage
+8. 使用 linux-4.4.82/arch/arm/boot/uImage  和 
+linux-4.4.82/arch/arm/boot/dts/exynos4412-origen.dtb
+至此没有异常的话可以正常启动 linux， 
+但是挂载不了根文件系统，因为没有配置网卡驱动
+
+9. 网卡移植 参考文档  网卡驱动移植.docx
+
