@@ -290,7 +290,13 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
 		irqnr = irqstat & ~0x1c00;
 
 		if (likely(irqnr > 15 && irqnr < 1021)) {
+//			if (irqnr != 28 && irqnr != 54 && irqnr != 86 && irqnr != 90 && irqnr != 107 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109) {
+//				printk("wusz %s %d irqnr %d \n", __func__, __LINE__, irqnr);
+//			}
 			irqnr = irq_find_mapping(gic->domain, irqnr);
+//			if (irqnr != 28 && irqnr != 54 && irqnr != 86 && irqnr != 90 && irqnr != 107 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109 && irqnr != 109) {
+//				printk("wusz %s %d irqnr %d \n", __func__, __LINE__, irqnr);
+//			}
 			handle_IRQ(irqnr, regs);
 			continue;
 		}

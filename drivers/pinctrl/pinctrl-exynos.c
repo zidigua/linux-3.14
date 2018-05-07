@@ -138,6 +138,7 @@ static int exynos_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
 		return -EINVAL;
 	}
 
+//	printk("wusz %s %d irq  %d  desc  %p\n", __func__, __LINE__, irqd->irq, irq_to_desc(irqd->irq));
 	if (type & IRQ_TYPE_EDGE_BOTH)
 		__irq_set_handler_locked(irqd->irq, handle_edge_irq);
 	else
@@ -366,6 +367,7 @@ static int exynos_wkup_irq_set_type(struct irq_data *irqd, unsigned int type)
 		return -EINVAL;
 	}
 
+//	printk("wusz %s %d irq  %d  desc  %p\n", __func__, __LINE__, irqd->irq, irq_to_desc(irqd->irq));
 	if (type & IRQ_TYPE_EDGE_BOTH)
 		__irq_set_handler_locked(irqd->irq, handle_edge_irq);
 	else
@@ -441,6 +443,9 @@ static void exynos_irq_eint0_15(unsigned int irq, struct irq_desc *desc)
 		chip->irq_ack(&desc->irq_data);
 
 	eint_irq = irq_linear_revmap(bank->irq_domain, eintd->irq);
+//	if (irq != 28 && irq != 54) {
+//		printk("wusz %s %d irq %d eint_irq %d desc %p\n", __func__, __LINE__, irq, eint_irq, desc);
+//	}
 	generic_handle_irq(eint_irq);
 	chip->irq_unmask(&desc->irq_data);
 	chained_irq_exit(chip, desc);
@@ -470,7 +475,9 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
 	int i;
 
 	chained_irq_enter(chip, desc);
-
+//	if (irq != 28) {
+//		printk("wusz %s %d irq %d desc %p \n", __func__, __LINE__, irq, desc);
+//	}
 	for (i = 0; i < eintd->nr_banks; ++i) {
 		struct samsung_pin_bank *b = eintd->banks[i];
 		pend = readl(d->virt_base + ctrl->weint_pend + b->eint_offset);
@@ -557,6 +564,7 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
 			}
 			weint_data[idx].irq = idx;
 			weint_data[idx].bank = bank;
+//			printk("wusz %s %d irq  %d  desc  %p\n", __func__, __LINE__, irq, irq_to_desc(irq));
 			irq_set_handler_data(irq, &weint_data[idx]);
 			irq_set_chained_handler(irq, exynos_irq_eint0_15);
 		}
@@ -571,6 +579,7 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
 		return 0;
 	}
 
+//	printk("wusz %s %d irq  %d  desc  %p\n", __func__, __LINE__, irq, irq_to_desc(irq));
 	muxed_data = devm_kzalloc(dev, sizeof(*muxed_data)
 		+ muxed_banks*sizeof(struct samsung_pin_bank *), GFP_KERNEL);
 	if (!muxed_data) {

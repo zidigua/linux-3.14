@@ -63,6 +63,7 @@ int irq_set_irq_type(unsigned int irq, unsigned int type)
 		return -EINVAL;
 
 	type &= IRQ_TYPE_SENSE_MASK;
+//	printk("wusz %s %d irq %d desc %p \n", __func__, __LINE__, irq, desc);
 	ret = __irq_set_trigger(desc, irq, type);
 	irq_put_desc_busunlock(desc, flags);
 	return ret;
@@ -543,7 +544,9 @@ handle_edge_irq(unsigned int irq, struct irq_desc *desc)
 			    irqd_irq_masked(&desc->irq_data))
 				unmask_irq(desc);
 		}
-
+//		if (irq != 28) {
+//			printk("wusz %s %d irq %d desc %p \n", __func__, __LINE__, irq, desc);
+//		}
 		handle_irq_event(desc);
 
 	} while ((desc->istate & IRQS_PENDING) &&

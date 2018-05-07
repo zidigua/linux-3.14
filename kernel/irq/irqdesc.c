@@ -312,6 +312,9 @@ int generic_handle_irq(unsigned int irq)
 
 	if (!desc)
 		return -EINVAL;
+//	if (irq != 28 && irq != 170 && irq != 86 && irq != 54 && irq != 107 && irq != 109) {
+//		printk("wusz %s %d irq %d desc %p \n", __func__, __LINE__, irq, desc);
+//	}
 	generic_handle_irq_desc(irq, desc);
 	return 0;
 }
